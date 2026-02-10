@@ -1,6 +1,7 @@
 package com.github.fabianpaus.localjavatesting;
 
 
+import com.github.fabianpaus.localjavatesting.keycloak.KeycloakConfig;
 import com.github.fabianpaus.localjavatesting.keycloak.KeycloakDownloader;
 
 import java.nio.file.Path;
@@ -11,5 +12,9 @@ public class Main {
     public static void main(String[] args) {
         Path home = KeycloakDownloader.download("26.4.7", Paths.get("downloads"));
         System.out.println("Downloaded Keycloak to " + home);
+        KeycloakConfig config = KeycloakConfig.home(home)
+                .randomPorts()
+                .detectDebugger();
+
     }
 }
