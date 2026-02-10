@@ -12,6 +12,7 @@
     </parent>
 
     <artifactId>local-java-testing-lib</artifactId>
+    <name>Local Java Testing Library</name>
     <packaging>jar</packaging>
 
 </project>

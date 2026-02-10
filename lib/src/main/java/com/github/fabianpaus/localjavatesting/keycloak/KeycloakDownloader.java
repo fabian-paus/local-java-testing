@@ -11,20 +11,30 @@ import java.nio.file.Path;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class KeycloakDownloader {
+    private static final Logger logger = LogManager.getLogger(KeycloakDownloader.class);
 
+    /**
+     * Download Keycloak with a specific version to a local directory.
+     *
+     * @param version Version of Keycloak to download, e.g. 26.5.2
+     * @param parentDirectory Where should the downloaded Keycloak be stored?
+     * @return Path to downloaded Keycloak directory
+     */
     public static Path download(String version, Path parentDirectory) {
         Path downloadDir = parentDirectory.resolve("keycloak-" + version);
         if (alreadyDownloaded(downloadDir)) {
-            System.out.println("Keycloak: Using downloaded version at " + downloadDir);
+            logger.info("Using downloaded version at {}", downloadDir);
             cleanupDataDirectory(downloadDir);
             cleanupProvidersDirectory(downloadDir);
             return downloadDir.toAbsolutePath();
         }
 
         long startTime = System.currentTimeMillis();
-        System.out.println("Keycloak: Downloading version " + version);
+        logger.info("Downloading version {}", version);
 
         String keycloakZipUrl = "https://github.com/keycloak/keycloak/releases/download/"
                 + version + "/keycloak-" + version + ".zip";
@@ -34,7 +44,7 @@ public class KeycloakDownloader {
         Path absDownloadDir = downloadDir.toAbsolutePath();
         long endTime = System.currentTimeMillis();
         double duration = (endTime - startTime) / 1000.0;
-        System.out.println("Keycloak: Finished downloading (" + duration + "s) to " + absDownloadDir);
+        logger.info("Finished downloading ({}s) to {}", duration, absDownloadDir);
 
         return absDownloadDir;
     }
@@ -62,6 +72,9 @@ public class KeycloakDownloader {
     }
 
     private static void deleteAllFiles(Path directory) {
+        if (Files.notExists(directory)) {
+            return;
+        }
         try (Stream<Path> files = Files.list(directory)) {
             files.forEach((path) -> {
                 try {
