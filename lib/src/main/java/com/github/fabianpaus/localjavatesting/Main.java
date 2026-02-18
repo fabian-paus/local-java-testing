@@ -3,6 +3,7 @@ package com.github.fabianpaus.localjavatesting;
 
 import com.github.fabianpaus.localjavatesting.keycloak.KeycloakConfig;
 import com.github.fabianpaus.localjavatesting.keycloak.KeycloakDownloader;
+import com.github.fabianpaus.localjavatesting.keycloak.KeycloakProcess;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,5 +17,9 @@ public class Main {
                 .randomPorts()
                 .detectDebugger();
 
+        KeycloakProcess process = new KeycloakProcess(config);
+        process.start();
+
+        process.kill();
     }
 }
