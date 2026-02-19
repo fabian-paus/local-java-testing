@@ -44,6 +44,8 @@ public class ManagedProcess {
 
         builder.redirectErrorStream(true);
 
+        System.out.println(String.join(" ", command.stream().map((arg) -> "\"" + arg + "\"").toList()));
+
         try {
             process = builder.start();
         } catch (IOException e) {
